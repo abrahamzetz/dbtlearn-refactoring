@@ -50,29 +50,26 @@ paid_orders as (
     left join customers c on orders.user_id = c.id
 ),
 
-customer_orders as (
-    select customers.id as customer_id
-        , min(orders.order_date) as first_order_date
-        , max(orders.order_date) as most_recent_order_date
-        , count(orders.id) as number_of_orders
-    from customers
-    left join orders
-    on orders.user_id = customers.id
-    group by 1
-),
-
 final as (
     select
     p.*,
     row_number() over (order by p.order_id) as transaction_seq,
     row_number() over (partition by customer_id order by p.order_id) as customer_sales_seq,
-    case when c.first_order_date = p.order_placed_at
+    case 
+        when (
+            rank() over(
+                partition by customer_id
+                order by order_placed_at, order_id
+            ) = 1
+        )
     then 'new'
     else 'return' end as nvsr,
     x.clv_bad as customer_lifetime_value,
-    c.first_order_date as fdos
+    first_value(paid_orders.order_placed_at) over (
+        partition by paid_orders.customer_id
+        order by paid_orders.order_placed_at
+    ) as fdos
     from paid_orders p
-    left join customer_orders as c using (customer_id)
     left outer join clv_bad x
         on x.order_id = p.order_id
     order by order_id
