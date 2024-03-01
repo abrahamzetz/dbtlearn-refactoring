@@ -11,6 +11,7 @@ paid_orders as (
 final as (
     select
         paid_orders.order_id,
+        -- add comments for CI
         paid_orders.customer_id,
         paid_orders.order_placed_at,
         paid_orders.order_status,
