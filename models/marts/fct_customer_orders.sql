@@ -65,3 +65,6 @@ final as (
 -- Simple Select Statement
 select * from final
 order by order_id
+{% if env_var("DBT_MY_ENV") in ['dev', 'ci'] -%}
+    limit 100
+{% endif %}
