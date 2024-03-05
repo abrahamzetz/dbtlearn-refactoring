@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: int_orders
+    description: intermediate code
+    columns:
+      - name: order_id
+        description: unique order id
+        tests:
+          - unique
+          - not_null
+  
+  - name: fct_customer_orders
+    description: fact table
+    columns:
+      - name: order_id
+        description: unique order id
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('int_orders')
+              field: order_id
