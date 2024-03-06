@@ -23,3 +23,6 @@ models:
               field: order_id
       - name: total_amount_paid
         description: total amount paid
+        tests: 
+          - average_dollars_spent_greater_than_one:
+              group_by_column: customer_id

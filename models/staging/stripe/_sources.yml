@@ -1,0 +1,33 @@
+version: 2
+
+sources:
+  - name: stripe
+    database: analytics
+    schema: raw
+    tables:
+      - name: payment
+        columns:
+          - name: id
+            description: unique payment id
+            tests:
+              - unique:
+                  config:
+                    severity: error
+                    error_if: ">100"
+                    warn_if: ">10"
+
+          - name: paymentmethod
+            tests:
+              - accepted_values:
+                  values: ['credit_card', 'bank_transfer', 'gift_card', 'coupon']
+                  config:
+                    where: "status != 'fail'"
+          - name: status
+            tests:
+              - accepted_values:
+                  values: ['success', 'fail']
+                  config:
+                    limit: 10
+                    store_failures: true
+                    schema: abc_test
+	
