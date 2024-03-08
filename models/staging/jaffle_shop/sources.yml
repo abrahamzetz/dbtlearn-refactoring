@@ -1,9 +1,0 @@
-version: 2
-
-sources:
-  - name: jaffle_shop
-    database: analytics
-    schema: raw
-    tables:
-      - name: customers
-      - name: orders
