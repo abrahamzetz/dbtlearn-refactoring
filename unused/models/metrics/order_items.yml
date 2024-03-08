@@ -1,0 +1,14 @@
+semantic_models:
+  - name: order_items
+    defaults:
+      agg_time_dimension: order_date
+    description: |
+      Order items.
+    #The name of the dbt model and schema
+    model: ref('fct_orders')
+    measures:
+      - name: median_revenue
+        description: the median revenue generated for each order item
+        agg: median
+        expr: product_price
+
