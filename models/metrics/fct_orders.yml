@@ -3,7 +3,7 @@ semantic_models:
     defaults:
       agg_time_dimension: order_date
     description: |
-      Order fact table. This table is at the order grain with one row per order. 
+      Order fact table. This table is at the order grain with one row per order.
     #The name of the dbt model and schema
     model: ref('fct_orders')
     entities:
@@ -16,3 +16,31 @@ semantic_models:
       - name: min_order_value
         agg: min
         expr: amount
+      - name: order_count
+        agg: count_distinct
+        expr: order_id
+      - name: order_total
+        agg: sum
+        expr: amount
+      - name: order_amount
+        agg: sum
+        expr: amount
+
+metrics:
+  - name: "order_count"
+    label: "order_count"
+    description: the number of orders placed
+    type: simple
+    type_params:
+      measure: order_count
+  - name: "order_gross_profit"
+    description: "Gross profit from each order."
+    type: derived
+    label: "order_gross_profit"
+    type_params:
+      expr: revenue - cost
+      metrics:
+        - name: order_total
+          alias: revenue
+        - name: order_amount
+          alias: cost
