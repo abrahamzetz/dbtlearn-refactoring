@@ -33,6 +33,18 @@ metrics:
     type: simple
     type_params:
       measure: order_count
+  - name: order_total
+    label: order_total
+    description: order total
+    type: simple
+    type_params:
+      measure: order_total
+  - name: order_amount
+    label: order_amount
+    description: order total
+    type: simple
+    type_params:
+      measure: order_amount
   - name: "order_gross_profit"
     description: "Gross profit from each order."
     type: derived
